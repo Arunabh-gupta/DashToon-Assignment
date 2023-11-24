@@ -4,16 +4,17 @@ import BounceLoader from "react-spinners/BounceLoader";
 import './InputForm.css'; // Import the CSS file
 
 const InputForm = () => {
-  const [prompts, setPrompts] = useState(Array(10).fill(''));
-  const [Responses, setResponses] = useState([]);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [prompts, setPrompts] = useState(Array(10).fill('')); // stores all the prompts
+  const [Responses, setResponses] = useState([]); // stores all the responses from the api call
+  const [errorMessage, setErrorMessage] = useState(''); // stores error message if any prompt field is left blank
 
   // Loading Screen
-  const [loading, setloading] = useState(false);
+  const [loading, setloading] = useState(false); // will handle the loading screen animations. 
 
-  const [imageContainerBox, setimageContainerBox] = useState(false);
+  const [imageContainerBox, setimageContainerBox] = useState(false); // handles weather imageContainer should be visible or not
 
-  const handleInputChange = (index, value) => {
+  
+  const handleInputChange = (index, value) => { // sets the text values of text boxes in the prompts state
     const newPrompts = [...prompts];
     newPrompts[index] = value;
     setPrompts(newPrompts);
@@ -34,7 +35,7 @@ const InputForm = () => {
       setloading(true);
       console.log("fetching data from api...");
       const responses = await Promise.all(prompts.map(prompt => query({ inputs: prompt })));
-      // Handle responses here, e.g., display images
+      // Handle responses here 
       console.log(responses);
       setResponses(responses);
       if (responses) {
@@ -48,6 +49,8 @@ const InputForm = () => {
 
   return (
     <div className="main-container">
+      
+      {/* if loading is set to true then loading screen should be active otherwise input form should be active. */}
       {loading ? (
         <div className="loader-container">
           <BounceLoader
@@ -78,6 +81,9 @@ const InputForm = () => {
             <button onClick={handleSubmit}>Generate Panel</button>
             {errorMessage && <p className="error-message">{errorMessage}</p>}
           </div>
+          
+           {/* if imageContainerBox is true means we have all the responses to all the prompts, 
+           then ImageContainer component is rendered.*/}
           {imageContainerBox && (
             <div className="image-container">
               <ImageContainer responses={Responses} closeContainer={setimageContainerBox} />
